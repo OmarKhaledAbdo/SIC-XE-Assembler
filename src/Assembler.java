@@ -1,13 +1,5 @@
 import javafx.util.Pair;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 class Assembler {
 
@@ -21,32 +13,27 @@ class Assembler {
     }
 
     private void constructOpTab() {
-        BufferedReader buffread;
-        try {
-            String str;
-            buffread = new BufferedReader(new FileReader(new File("InstructionSet.txt")));
-            while((str = buffread.readLine()) != null) {
-                String[] tokens = str.trim().split(" +");  ///Changed from space.
-                opTab.put(tokens[0],new Pair<>(tokens[1],tokens[2]));
-            }
-            buffread.close();
-        } catch (IOException e) {
+        List<String []> input = Reader.readFile("InstructionSet.txt");
+        for(String [] tokens: input) {
+            try {
+                if(tokens.length != 3) {
+                    throw new Exception("Length is not 3!");
+                }
 
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+            opTab.put(tokens[0],new Pair<>(tokens[1],tokens[2]));
         }
     }
 
     private void readProgram() {
-        BufferedReader buffread;
-        try {
-            String str;
-            buffread = new BufferedReader(new FileReader(new File("program.txt")));
-            while((str = buffread.readLine()) != null) {
-                commands.add(new Command(str));
-            }
-            buffread.close();
-        } catch (IOException e) {
+        List<String[]> program =  Reader.readFile("program.txt");
+        for(String [] tokens: program) {
+            commands.add(new Command(tokens));
         }
     }
+
 
     public void passOne() {
         Integer curAddr = Integer.valueOf(commands.get(0).operand);
@@ -89,8 +76,7 @@ class Assembler {
         private Integer address;
         private boolean isDirective = false;
 
-        public Command(String command) {
-            String[] tokens = command.trim().split(" +"); ///Changed from space.
+        public Command(String [] tokens) {
             Integer index = 0;
             if(!opTab.containsKey(tokens[index])) {
                 label = tokens[index++];
