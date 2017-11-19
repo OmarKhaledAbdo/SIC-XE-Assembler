@@ -13,10 +13,12 @@ public class Reader {
             String str;
             buffread = new BufferedReader(new FileReader(new File(fileName)));
             while((str = buffread.readLine()) != null) {
+                str = str.toUpperCase();
                 ret.add(str.trim().split(" +"));
             }
             buffread.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
         }
         return ret;
     }
