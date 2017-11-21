@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Program {
+public class Program implements Printable{
     private ArrayList<Command> commands = new ArrayList<>();
 
     public ArrayList<Command> getCommands() {
@@ -18,12 +18,10 @@ public class Program {
 
 
 
-    void print() {
-        System.out.println("\nProgram addresses\n");
+    public void print() {
+        System.out.println("\nProgram Addresses:\n");
         for (Command curCommand :commands) {
             System.out.println(curCommand);
-            //System.out.println(curCommand.getLabel() + " " + curCommand.getMnemonic() + " " +
-                    //(curCommand.getAddress() != null ? Integer.toHexString(curCommand.getAddress()).toUpperCase() : ""));
         }
     }
 }

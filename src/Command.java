@@ -17,37 +17,17 @@ public class Command {
 
         if (!format.equals(1) && !mnemonic.equals("END")) { //ELSE operand must be null
             operand = "";
+            //For word array.
             for (; index < tokens.length; index++) {
                 operand += tokens[index];
             }
         }
     }
 
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setMnemonic(String mnemonic) {
-        this.mnemonic = mnemonic;
-    }
-
-    public void setOperand(String operand) {
-        this.operand = operand;
-    }
-
     public void setAddress(Integer address) {
         if (!mnemonic.equals("END") && !mnemonic.equals("LTORG")) {
             this.address = address;
         }
-    }
-
-    public void setDirective(boolean directive) {
-        this.directive = directive;
     }
 
     public String getFormat() {
@@ -67,16 +47,38 @@ public class Command {
         return operand;
     }
 
-    public Integer getAddress() {
-        return address;
-    }
-
     public boolean isDirective() {
         return directive;
     }
 
     public String toString() {
-        return String.format("%7s %s %s", label != null ? label : "", mnemonic, address != null ? Integer.toHexString(address).toUpperCase() : "");
+        return String.format("%7s %s %s", label != null ? label : "", mnemonic, address != null ? Integer.toHexString
+                (address).toUpperCase() : "");
+    }
+
+    public String getOperandHexValue() {
+        StringBuilder s = new StringBuilder();
+        String operand = this.operand;
+
+        if (operand.startsWith("=C")) {
+            operand = operand.replace("=C'", "").replace("'", "");
+            for (char ch : operand.toCharArray()) {
+                s.append(String.format("%x", (int) ch));
+            }
+        } else if (operand.startsWith("=X")) {
+            operand = operand.replace("=X'", "").replace("'", "");
+            if(operand.length() % 2 == 1) {
+                operand = "0" + operand;
+            }
+            for (int i = 0; i < operand.length(); i += 2) {
+                String str = operand.substring(i, i + 2);
+                s.append(String.format("%1$02X", Integer.parseInt(str, 16)));
+            }
+        }
+
+        String hexValueOfLiteral = s.toString().toUpperCase();
+
+        return hexValueOfLiteral;
     }
 
     public Integer getByteInc() {

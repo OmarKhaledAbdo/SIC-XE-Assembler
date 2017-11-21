@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-
-class Assembler {
+class Assembler implements Printable{
 
     private SymbolTable symTab = new SymbolTable();
     private LiteralTable litTab = new LiteralTable();
@@ -11,7 +8,7 @@ class Assembler {
         this.program = program;
     }
 
-    private Integer handleDirective(Command curCommand, Integer curAddr, List<String> auxArray) {
+    private Integer handleDirective(Command curCommand, Integer curAddr) {
         Integer inc = 0;
         switch (curCommand.getMnemonic()) {
             case "RESB":
@@ -27,10 +24,10 @@ class Assembler {
                 inc = curCommand.getWordInc();
                 break;
             case "LTORG":
-                inc = litTab.addLiteralsToTable(auxArray, curAddr);
+                inc = litTab.addLiteralsToTable(curAddr);
                 break;
             case "END":
-                inc = litTab.addLiteralsToTable(auxArray, curAddr);
+                inc = litTab.addLiteralsToTable(curAddr);
                 break;
         }
         return inc;
@@ -42,13 +39,12 @@ class Assembler {
 
     public void passOne() {
         Integer curAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
-        List<String> auxArray = new ArrayList<>();
         for (Command curCommand : program.getCommands()) {
-            symTab.put(curCommand.getLabel(), curAddr);
-            litTab.addIfLiteral(curCommand, auxArray);
+            symTab.addLabel(curCommand.getLabel(), curAddr);
+            litTab.addLiteral(curCommand);
             curCommand.setAddress(curAddr);
-            if (curCommand.isDirective()) {   //Special handling is required
-                curAddr += handleDirective(curCommand, curAddr, auxArray);
+            if (curCommand.isDirective()) {  //Special handling is required
+                curAddr += handleDirective(curCommand, curAddr);
             } else {
                 curAddr += handleInstruction(curCommand);
             }
@@ -58,5 +54,6 @@ class Assembler {
     public void print() {
         program.print();
         symTab.print();
+        litTab.print();
     }
 }

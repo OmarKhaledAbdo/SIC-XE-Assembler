@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class OpCodeTable {
     private Map<String, Pair<String, String>> opTab = new HashMap<>();
-
     public OpCodeTable(String file) {
         List<String[]> input = Reader.readFile(file);
         for (String[] tokens : input) {
@@ -22,12 +21,10 @@ public class OpCodeTable {
             opTab.put(tokens[0], new Pair<>(tokens[1], tokens[2]));
         }
     }
-
     public boolean containsKey(String key) {
         return opTab.containsKey(key);
     }
-
-    public String getFirst(String key) {
+    public String getFirst (String key) {
         return opTab.get(key).getKey();
     }
 }
