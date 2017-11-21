@@ -49,7 +49,5 @@ public class LiteralTable implements Printable {
             System.out.println(pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
-
     }
-
 }
