@@ -9,6 +9,11 @@ public class SymbolTable implements  Printable{
             symTab.put(key, value);
         }
     }
+
+    public Integer getLabelAddress (String label) {
+        return symTab.get(label);
+    }
+
     public void print() {
         System.out.println("\nSymbol Table:\n");
         Iterator it = symTab.entrySet().iterator();

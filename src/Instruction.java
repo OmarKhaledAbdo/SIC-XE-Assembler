@@ -17,7 +17,6 @@ public abstract class Instruction extends Command {
         return null;
     }
 
-
     public void setFields(String label, String mnemonic, Integer opCode, String format, String operand) {
         setLabel(label);
         setMnemonic(mnemonic);
@@ -26,8 +25,15 @@ public abstract class Instruction extends Command {
         setOpCode(opCode);
     }
 
+    //Returns the opCode after removing the last two bits
+    protected String trimmedOpcode () {
+        String opCode = Integer.toBinaryString(this.opCode);
+        opCode = NumberUtils.addLeadingZeroes(opCode, 8);
+        opCode = opCode.substring(0, 6);
+        return opCode;
+    }
+
     public Integer handle(Integer curAddr, LiteralTable litTab) {
         return Integer.valueOf(format);
     }
-
 }

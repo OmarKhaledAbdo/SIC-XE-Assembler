@@ -1,4 +1,4 @@
-class Assembler implements Printable{
+class Assembler implements Printable {
 
     private SymbolTable symTab = new SymbolTable();
     private LiteralTable litTab = new LiteralTable();
@@ -18,9 +18,9 @@ class Assembler implements Printable{
         }
     }
 
-    public void passTwo () {
+    public void passTwo() {
         for (Command curCommand : program.getCommands()) {
-            curCommand.constructMachineCode();
+            curCommand.constructMachineCode(symTab, litTab);
         }
 
     }

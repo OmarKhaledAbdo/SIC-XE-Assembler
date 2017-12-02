@@ -6,8 +6,8 @@ public class Directive extends Command {
         }
     }
 
-    public void setOperand (String operand) {
-        if(mnemonic.equals("END")) {
+    public void setOperand(String operand) {
+        if (mnemonic.equals("END")) {
             this.operand = null;
         } else {
             this.operand = operand;
@@ -15,11 +15,11 @@ public class Directive extends Command {
     }
 
     @Override
-    public void constructMachineCode() {
-
+    public void constructMachineCode(SymbolTable symTab, LiteralTable litTab) {
+        machineCode = "";
     }
 
-    public Directive (String label, String mnemonic, String operand) {
+    public Directive(String label, String mnemonic, String operand) {
         setLabel(label);
         setMnemonic(mnemonic);
         setOperand(operand);

@@ -15,8 +15,6 @@ public class Program implements Printable{
         }
     }
 
-
-
     public void print() {
         System.out.println("\nProgram Addresses:\n");
         for (Command curCommand :commands) {

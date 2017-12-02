@@ -37,11 +37,10 @@ public abstract class Command {
         if (isDirective) {
             return new Directive(label, mnemonic, operand);
         } else {
-            Integer opCode = Integer.parseInt(opTab.getOpcode(mnemonic),16);
+            Integer opCode = Integer.parseInt(opTab.getOpcode(mnemonic), 16);
             return Instruction.create(label, mnemonic, opCode, format, operand);
         }
     }
-
 
 
     public void setAddress(Integer address) {
@@ -110,7 +109,8 @@ public abstract class Command {
 
 
     abstract public Integer handle(Integer curAddress, LiteralTable litTab);
-    abstract public void constructMachineCode();
+
+    abstract public void constructMachineCode(SymbolTable symTab, LiteralTable litTab);
 
 
     public String toString() {

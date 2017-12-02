@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class InstructionTwo extends Instruction {
@@ -17,24 +16,23 @@ public class InstructionTwo extends Instruction {
         reg.put("SW", 9);
     }
 
-
     public InstructionTwo(String label, String mnemonic, Integer opCode, String format, String operand) {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
-    public void constructMachineCode() {
+    public void constructMachineCode(SymbolTable symTab, LiteralTable litTab) {
         String[] registers = operand.split("\\s*,\\s*");
         for (String x : registers) {
             System.out.println(x);
         }
         String regA = Integer.toBinaryString(reg.get(registers[0]));
-        String regB = "0000";
+        String regB = "0";
         if(registers.length == 2) {
             regB = Integer.toBinaryString(reg.get(registers[1]));
         }
-        regA = NumberUtils.addLeadingZeroes(regA);
-        regB = NumberUtils.addLeadingZeroes(regB);
+        regA = NumberUtils.addLeadingZeroes(regA, 4);
+        regB = NumberUtils.addLeadingZeroes(regB, 4);
         machineCode = Integer.toBinaryString(opCode) + regA + regB;
-        System.out.println(machineCode.length() + " " + regA + " " + regB + " " + machineCode);
+        //System.out.println(machineCode.length() + " " + regA + " " + regB + " " + machineCode);
     }
 }

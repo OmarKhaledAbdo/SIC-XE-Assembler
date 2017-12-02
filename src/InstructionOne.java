@@ -4,7 +4,7 @@ public class InstructionOne extends Instruction {
         setFields(label, mnemonic, opCode, format, null);
     }
     @Override
-    public void constructMachineCode() {
+    public void constructMachineCode(SymbolTable symTab, LiteralTable litTab) {
 
     }
 }
