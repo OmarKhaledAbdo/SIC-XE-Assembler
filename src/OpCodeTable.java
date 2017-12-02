@@ -21,10 +21,13 @@ public class OpCodeTable {
             opTab.put(tokens[0], new Pair<>(tokens[1], tokens[2]));
         }
     }
-    public boolean containsKey(String key) {
+    public boolean containsKey (String key) {
         return opTab.containsKey(key);
     }
-    public String getFirst (String key) {
+    public String getFormat (String key) {
         return opTab.get(key).getKey();
+    }
+    public String getOpcode (String key) {
+        return opTab.get(key).getValue();
     }
 }

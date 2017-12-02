@@ -1,37 +1,54 @@
-public class Command {
-    private String format;
-    private String label;
-    private String mnemonic;
-    private String operand;
-    private Integer address;
-    private boolean directive;
 
-    public Command(String[] tokens, OpCodeTable opTab) {
+public abstract class Command {
+    protected String format;
+    protected String label;
+    protected String mnemonic;
+    protected String operand;
+    protected Integer address;
+    protected boolean directive;
+    protected String machineCode;
+
+
+    protected Integer opCode;
+
+    public Command() {
+
+    }
+
+    public static Command create(String[] tokens, OpCodeTable opTab) {
         Integer index = 0;
+        String label = null;
+
         if (!opTab.containsKey(tokens[index])) {
             label = tokens[index++];
         }
-        mnemonic = tokens[index++];
-        format = opTab.getFirst(mnemonic);
-        directive = format.equals("X");
+        String mnemonic = tokens[index++];
+        String format = opTab.getFormat(mnemonic);
 
-        if (!format.equals(1) && !mnemonic.equals("END")) { //ELSE operand must be null
-            operand = "";
-            //For word array.
-            for (; index < tokens.length; index++) {
-                operand += tokens[index];
-            }
+
+        boolean isDirective = format.equals("X");
+
+
+        String operand = "";
+        //For word array.
+        for (; index < tokens.length; index++) {
+            operand += tokens[index];
+        }
+        if (isDirective) {
+            return new Directive(label, mnemonic, operand);
+        } else {
+            Integer opCode = Integer.parseInt(opTab.getOpcode(mnemonic),16);
+            return Instruction.create(label, mnemonic, opCode, format, operand);
         }
     }
 
+
+
     public void setAddress(Integer address) {
-        if (!mnemonic.equals("END") && !mnemonic.equals("LTORG")) {
-            this.address = address;
-        }
+        this.address = address;
     }
 
     public String getFormat() {
-
         return format;
     }
 
@@ -51,14 +68,59 @@ public class Command {
         return directive;
     }
 
+    public String getMachineCode() {
+        return machineCode;
+    }
+
+    public void setMachineCode(String machineCode) {
+        this.machineCode = machineCode;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
+    }
+
+    public void setOperand(String operand) {
+        this.operand = operand;
+    }
+
+    public Integer getAddress() {
+        return address;
+    }
+
+    public void setDirective(boolean directive) {
+        this.directive = directive;
+    }
+
+    public Integer getOpCode() {
+        return opCode;
+    }
+
+    public void setOpCode(Integer opCode) {
+        this.opCode = opCode;
+    }
+
+
+    abstract public Integer handle(Integer curAddress, LiteralTable litTab);
+    abstract public void constructMachineCode();
+
+
     public String toString() {
-        return String.format("%7s %s %s", label != null ? label : "", mnemonic, address != null ? Integer.toHexString
-                (address).toUpperCase() : "");
+        return String.format("%7s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getAddress() != null ? Integer.toHexString
+                (getAddress()).toUpperCase() : "");
     }
 
     public String getOperandHexValue() {
         StringBuilder s = new StringBuilder();
-        String operand = this.operand;
+        String operand = this.getOperand();
 
         if (operand.startsWith("=C")) {
             operand = operand.replace("=C'", "").replace("'", "");
@@ -67,7 +129,7 @@ public class Command {
             }
         } else if (operand.startsWith("=X")) {
             operand = operand.replace("=X'", "").replace("'", "");
-            if(operand.length() % 2 == 1) {
+            if (operand.length() % 2 == 1) {
                 operand = "0" + operand;
             }
             for (int i = 0; i < operand.length(); i += 2) {
@@ -84,7 +146,7 @@ public class Command {
     public Integer getByteInc() {
         Integer incValue = 0;
         /* Modify temporary operand while maintaining the original */
-        String operand = this.operand;
+        String operand = this.getOperand();
         if (operand.startsWith("=")) {
             operand = operand.substring(1);
         }
@@ -101,6 +163,6 @@ public class Command {
     }
 
     public Integer getWordInc() {
-        return 3 * operand.replaceAll("\\s", "").trim().split("\\s*,\\s*").length;
+        return 3 * getOperand().replaceAll("\\s", "").trim().split("\\s*,\\s*").length;
     }
 }
