@@ -20,11 +20,11 @@ public class InstructionThree extends Instruction {
 
     private void setRelativity(Integer targetAddr, Integer baseAddr) {
         Integer pc = address + Integer.valueOf(format, 10);
-        Integer diff = Math.abs(targetAddr - pc);
+        Integer diff = targetAddr - pc;
         if (diff > 2047) { //Base Relative
             try {
                 diff = targetAddr - baseAddr;
-                if (diff > 4095) {
+                if (diff > 4095 || diff < 0) {
                     throw new Exception("Out of base range");
                 }
             } catch (Exception e) {
@@ -32,7 +32,6 @@ public class InstructionThree extends Instruction {
             }
             b = '1';
             p = '0';
-
         } else {
             try {
                 if (diff < -2048) {
@@ -45,8 +44,8 @@ public class InstructionThree extends Instruction {
 //            System.out.println("Diff " + diff);
             b = '0';
             p = '1';
-            disp = NumberUtils.adjustSize(Integer.toBinaryString(diff), 12);
         }
+        disp = NumberUtils.adjustSize(Integer.toBinaryString(diff), 12);
     }
 
     public void constructMachineCode(Assembler asm) {

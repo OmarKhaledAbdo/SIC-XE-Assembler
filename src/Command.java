@@ -9,7 +9,6 @@ public abstract class Command {
     protected Integer opCode;
 
     public Command() {
-
     }
 
     public static Command create(String[] tokens, OpCodeTable opTab) {
@@ -19,12 +18,11 @@ public abstract class Command {
         if (!opTab.containsKey(tokens[index])) {
             label = tokens[index++];
         }
+
         String mnemonic = tokens[index++];
         String format = opTab.getFormat(mnemonic);
 
-
         boolean isDirective = format.equals("X");
-
 
         String operand = "";
         //For word array.
