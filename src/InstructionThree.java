@@ -55,7 +55,7 @@ public class InstructionThree extends Instruction {
             return;
         }
 
-        System.out.println(mnemonic);
+        System.out.println(mnemonic + " " + operand);
 
         if (operand.startsWith("@")) { //indirect
             //invariants
@@ -95,12 +95,13 @@ public class InstructionThree extends Instruction {
             setRelativity(targetAddr, asm.getBaseAddr());
         } else {  //Simple, op m, x OR op c, x
 
-            String[] tokens = operand.split("\\s*,\\s");
+            String[] tokens = operand.split("\\s*,\\s*");
             n = '1';
             i = '1';
             x = tokens.length == 1 ? '0' : '1';
             String operandOne = tokens[0];
             Integer targetAddr = asm.getSymTab().getAddress(operandOne);
+            System.out.println("OperandOne " + operandOne + " TargetAddr " + targetAddr);
             setRelativity(targetAddr, asm.getBaseAddr());
 //            } else {
 //                Integer targetAddr = Integer.valueOf(operandOne, 10);

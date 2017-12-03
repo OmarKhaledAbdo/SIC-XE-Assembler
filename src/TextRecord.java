@@ -1,7 +1,7 @@
 public class TextRecord {
     private String firstExec;
     private String body;
-    private Integer length;
+    private Integer length = 0;
 
     public Integer getLength() {
         return length;
@@ -30,8 +30,8 @@ public class TextRecord {
     }
 
     public  void addToBody (String machineCode) {
-        if(body.isEmpty()) {
-            body += machineCode;
+        if(body == null) {
+            body = machineCode;
         } else {
             body += " " + machineCode;
         }

@@ -27,8 +27,15 @@ public abstract class Command {
         String operand = "";
         //For word array.
         for (; index < tokens.length; index++) {
-            operand += tokens[index];
+            //System.out.println(tokens[index]);
+            if(operand.isEmpty()) {
+                operand = tokens[index];
+            }else {
+                operand += " " + tokens[index];
+            }
+
         }
+        //System.out.println("Operand " + operand + "\n");
         if (isDirective) {
             return new Directive(label, mnemonic, operand);
         } else {
@@ -118,13 +125,15 @@ public abstract class Command {
     }
 
     public Integer getByteInc() {
+        //System.out.println("Operand " + operand);
         Integer incValue = 0;
         /* Modify temporary operand while maintaining the original */
         String operand = this.getOperand();
         if (operand.startsWith("=")) {
             operand = operand.substring(1);
         }
-        operand = operand.replaceAll("\\s", "");
+        //operand = operand.replaceAll("\\s", "");
+        operand = operand.trim();
         switch (operand.charAt(0)) {
             case 'X':
                 incValue = (operand.length() - 3 + 1) / 2;
@@ -133,6 +142,7 @@ public abstract class Command {
                 incValue = operand.length() - 3;
                 break;
         }
+        System.out.println(operand + " incValue " + incValue);
         return incValue;
     }
 

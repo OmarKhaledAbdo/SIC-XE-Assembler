@@ -82,7 +82,6 @@ class Assembler implements Printable {
         }
         objectProgram.setEndRecord(new EndRecord(startAddr));
     }
-
     public void print() {
         program.print();
         symTab.print();

@@ -15,7 +15,7 @@ public class Directive extends Command {
     }
 
     public void setOperand(String operand) {
-        if (mnemonic.equals("END")) {
+        if (mnemonic.equals("END") || mnemonic.equals("LTORG")) {
             this.operand = null;
         } else {
             this.operand = operand;
@@ -27,8 +27,8 @@ public class Directive extends Command {
         if(getMachineCode() == null) {
             System.out.println(getMnemonic() + " " + getFormat());
         }
-        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand(), getAddress() != null ? Integer.toHexString
-                        (getAddress()).toUpperCase() : "",
+        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand() != null ? getOperand() : "",
+                getAddress() != null ? Integer.toHexString(getAddress()).toUpperCase() : "",
                 getMachineCode().toUpperCase());
     }
     @Override
