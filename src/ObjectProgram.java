@@ -29,4 +29,11 @@ public class ObjectProgram {
     public void setTextRecords(ArrayList<TextRecord> textRecords) {
         this.textRecords = textRecords;
     }
+    public void addToTextRecords (String machineCode) {
+        if(textRecords.isEmpty() ||
+                textRecords.get(textRecords.size() - 1).getLength() + machineCode.length() > 60) {
+            textRecords.add(new TextRecord());
+        }
+        textRecords.get(textRecords.size() - 1).addToBody(machineCode);
+    }
 }

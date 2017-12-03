@@ -76,11 +76,10 @@ class Assembler implements Printable {
         Integer startAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
         objectProgram.setHeaderRecord(new HeaderRecord(program.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
-
         for (Command curCommand : program.getCommands()) {
             curCommand.constructMachineCode(this);
+            objectProgram.addToTextRecords(curCommand.getMachineCode());
         }
-
         objectProgram.setEndRecord(new EndRecord(startAddr));
     }
 
