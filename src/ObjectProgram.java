@@ -25,15 +25,17 @@ public class ObjectProgram {
     public ArrayList<TextRecord> getTextRecords() {
         return textRecords;
     }
-
     public void setTextRecords(ArrayList<TextRecord> textRecords) {
         this.textRecords = textRecords;
     }
-    public void addToTextRecords (String machineCode) {
+
+    public void addToTextRecords (String machineCode, Integer addr) {
         if(textRecords.isEmpty() ||
                 textRecords.get(textRecords.size() - 1).getLength() + machineCode.length() > 60) {
-            textRecords.add(new TextRecord());
+            textRecords.add(new TextRecord(addr));
         }
         textRecords.get(textRecords.size() - 1).addToBody(machineCode);
     }
+
+
 }

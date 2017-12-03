@@ -1,5 +1,3 @@
-import com.sun.tools.javah.Util;
-
 import java.util.*;
 
 public class LiteralTable implements Printable {
@@ -38,8 +36,8 @@ public class LiteralTable implements Printable {
         literalPool.add(new ArrayList<>());
         for (LitTableData literal : auxArray) {
             if (litTab.get(literal.value).address == null) {
-                literalPool.get(curLiteralPool).add(literal);
                 litTab.get(literal.value).address = curAddr;
+                literalPool.get(curLiteralPool).add(literal);
                 curAddr += literal.length;
                 inc += literal.length;
             }

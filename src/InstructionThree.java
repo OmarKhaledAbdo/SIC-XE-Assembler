@@ -55,7 +55,7 @@ public class InstructionThree extends Instruction {
             return;
         }
 
-        System.out.println(mnemonic + " " + operand);
+        //System.out.println(mnemonic + " " + operand);
 
         if (operand.startsWith("@")) { //indirect
             //invariants
@@ -94,14 +94,13 @@ public class InstructionThree extends Instruction {
             Integer targetAddr = asm.getLitTab().getLiteralAddr(val);
             setRelativity(targetAddr, asm.getBaseAddr());
         } else {  //Simple, op m, x OR op c, x
-
             String[] tokens = operand.split("\\s*,\\s*");
             n = '1';
             i = '1';
             x = tokens.length == 1 ? '0' : '1';
             String operandOne = tokens[0];
             Integer targetAddr = asm.getSymTab().getAddress(operandOne);
-            System.out.println("OperandOne " + operandOne + " TargetAddr " + targetAddr);
+            //System.out.println("OperandOne " + operandOne + " TargetAddr " + targetAddr);
             setRelativity(targetAddr, asm.getBaseAddr());
 //            } else {
 //                Integer targetAddr = Integer.valueOf(operandOne, 10);
@@ -109,6 +108,6 @@ public class InstructionThree extends Instruction {
 //            }
         }
         machineCode = trimmedOpcode() + n + i + x + b + p + e + disp;
-        System.out.println(machineCode);
+        //System.out.println(machineCode);
     }
 }

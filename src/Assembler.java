@@ -4,6 +4,8 @@ class Assembler implements Printable {
     private LiteralTable litTab = new LiteralTable();
     private Program program;
     private ObjectProgram objectProgram = new ObjectProgram();
+    private Integer lastUsedAddress;
+    private Integer baseAddr;
 
     public SymbolTable getSymTab() {
         return symTab;
@@ -53,8 +55,6 @@ class Assembler implements Printable {
         this.baseAddr = baseAddr;
     }
 
-    private Integer lastUsedAddress;
-    private Integer baseAddr;
 
     public Assembler(Program program) {
         this.program = program;
@@ -76,10 +76,12 @@ class Assembler implements Printable {
         Integer startAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
         objectProgram.setHeaderRecord(new HeaderRecord(program.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
+
         for (Command curCommand : program.getCommands()) {
             curCommand.constructMachineCode(this);
-            objectProgram.addToTextRecords(curCommand.getMachineCode());
+            objectProgram.addToTextRecords(curCommand.getMachineCode(), curCommand.getAddress());
         }
+
         objectProgram.setEndRecord(new EndRecord(startAddr));
     }
     public void print() {

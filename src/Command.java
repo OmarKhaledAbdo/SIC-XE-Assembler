@@ -8,6 +8,7 @@ public abstract class Command {
     protected String machineCode;
     protected Integer opCode;
 
+
     public Command() {
     }
 
@@ -68,7 +69,6 @@ public abstract class Command {
     public boolean isDirective() {
         return directive;
     }
-
     public String getMachineCode() {
         return machineCode;
     }
