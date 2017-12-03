@@ -2,9 +2,14 @@
   <dictionary name="omarkhaled">
     <words>
       <w>addr</w>
+      <w>disp</w>
       <w>ixbpe</w>
+      <w>opcode</w>
       <w>resb</w>
       <w>resw</w>
+      <w>rsub</w>
+      <w>symb</w>
+      <w>xbpe</w>
     </words>
   </dictionary>
 </component>

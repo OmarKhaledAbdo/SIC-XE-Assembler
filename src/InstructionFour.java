@@ -3,21 +3,38 @@ public class InstructionFour extends Instruction {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
-    public void constructMachineCode(SymbolTable symTab, LiteralTable litTab) {
+    public String toString() {
+        String machineCode = Integer.toHexString(Integer.valueOf(getMachineCode(), 2)).toUpperCase();
+        machineCode = NumberUtils.adjustSize(machineCode, 8);
+        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand(),
+                getAddress() != null ? Integer.toHexString(getAddress()).toUpperCase() : "", machineCode);
+
+    }
+
+    public void constructMachineCode(Assembler asm) {
+        System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
-        String n;
-        System.out.println(operand);
+        char n, i, x = '0';
         if (operand.startsWith("#")) {
             String immediate = operand.substring(1);
             address = Integer.toBinaryString(Integer.valueOf(immediate, 10));
-            n = "0"; //n = 0, i = 1
+            n = '0';
+            i = '1';
+        } else if (operand.startsWith("@")) {
+            String symb = operand.substring(1);
+            address = Integer.toBinaryString(asm.getSymTab().getAddress(symb));
+            n = '1'; //n = 1, i = 1
+            i = '0';
         } else {
-            address = Integer.toBinaryString(symTab.getLabelAddress(operand));
-            n = "1"; //n = 1, i = 1
+            String[] tokens = operand.split("\\s*,\\s*");
+            String symb = tokens[0];
+            address = Integer.toBinaryString(asm.getSymTab().getAddress(symb));
+            n = '1'; //n = 1, i = 1
+            i = '1';
+            x = tokens.length == 1 ? '0' : '1';
         }
-        address = NumberUtils.addLeadingZeroes(address, 20);
-        String ixbpe = "10001";
-        machineCode = trimmedOpcode() + n + ixbpe + address;
-        System.out.println(machineCode);
+        address = NumberUtils.adjustSize(address, 20);
+        String bpe = "001";
+        machineCode = trimmedOpcode() + n + i + x + bpe + address;
     }
 }

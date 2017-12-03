@@ -15,12 +15,10 @@ public class InstructionTwo extends Instruction {
         reg.put("PC", 8);
         reg.put("SW", 9);
     }
-
     public InstructionTwo(String label, String mnemonic, Integer opCode, String format, String operand) {
         setFields(label, mnemonic, opCode, format, operand);
     }
-
-    public void constructMachineCode(SymbolTable symTab, LiteralTable litTab) {
+    public void constructMachineCode(Assembler asm) {
         String[] registers = operand.split("\\s*,\\s*");
         for (String x : registers) {
             System.out.println(x);
@@ -30,9 +28,8 @@ public class InstructionTwo extends Instruction {
         if(registers.length == 2) {
             regB = Integer.toBinaryString(reg.get(registers[1]));
         }
-        regA = NumberUtils.addLeadingZeroes(regA, 4);
-        regB = NumberUtils.addLeadingZeroes(regB, 4);
+        regA = NumberUtils.adjustSize(regA, 4);
+        regB = NumberUtils.adjustSize(regB, 4);
         machineCode = Integer.toBinaryString(opCode) + regA + regB;
-        //System.out.println(machineCode.length() + " " + regA + " " + regB + " " + machineCode);
     }
 }

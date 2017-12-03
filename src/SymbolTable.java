@@ -1,7 +1,6 @@
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 public class SymbolTable implements  Printable{
     private Map<String, Integer> symTab = new HashMap<>();
     public void addLabel(String key, Integer value) {
@@ -10,8 +9,12 @@ public class SymbolTable implements  Printable{
         }
     }
 
-    public Integer getLabelAddress (String label) {
+    public Integer getAddress(String label) {
         return symTab.get(label);
+    }
+
+    public boolean containsLabel(String label) {
+        return symTab.containsKey(label);
     }
 
     public void print() {

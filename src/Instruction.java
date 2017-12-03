@@ -28,12 +28,14 @@ public abstract class Instruction extends Command {
     //Returns the opCode after removing the last two bits
     protected String trimmedOpcode () {
         String opCode = Integer.toBinaryString(this.opCode);
-        opCode = NumberUtils.addLeadingZeroes(opCode, 8);
+        opCode = NumberUtils.adjustSize(opCode, 8);
         opCode = opCode.substring(0, 6);
         return opCode;
     }
 
-    public Integer handle(Integer curAddr, LiteralTable litTab) {
+    @Override
+    public Integer handle(Integer curAddress, Assembler asm) {
         return Integer.valueOf(format);
     }
+
 }

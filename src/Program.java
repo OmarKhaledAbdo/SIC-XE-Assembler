@@ -8,6 +8,7 @@ public class Program implements Printable{
     public ArrayList<Command> getCommands() {
         return commands;
     }
+
     public Program (String file, OpCodeTable opTab) {
         List<String[]> program = Reader.readFile(file);
         for (String[] tokens : program) {

@@ -1,4 +1,3 @@
-
 public abstract class Command {
     protected String format;
     protected String label;
@@ -7,8 +6,6 @@ public abstract class Command {
     protected Integer address;
     protected boolean directive;
     protected String machineCode;
-
-
     protected Integer opCode;
 
     public Command() {
@@ -108,39 +105,18 @@ public abstract class Command {
     }
 
 
-    abstract public Integer handle(Integer curAddress, LiteralTable litTab);
+    abstract public Integer handle(Integer curAddress, Assembler asm);
 
-    abstract public void constructMachineCode(SymbolTable symTab, LiteralTable litTab);
-
+    abstract public void constructMachineCode(Assembler asm);
 
     public String toString() {
-        return String.format("%7s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getAddress() != null ? Integer.toHexString
-                (getAddress()).toUpperCase() : "");
-    }
-
-    public String getOperandHexValue() {
-        StringBuilder s = new StringBuilder();
-        String operand = this.getOperand();
-
-        if (operand.startsWith("=C")) {
-            operand = operand.replace("=C'", "").replace("'", "");
-            for (char ch : operand.toCharArray()) {
-                s.append(String.format("%x", (int) ch));
-            }
-        } else if (operand.startsWith("=X")) {
-            operand = operand.replace("=X'", "").replace("'", "");
-            if (operand.length() % 2 == 1) {
-                operand = "0" + operand;
-            }
-            for (int i = 0; i < operand.length(); i += 2) {
-                String str = operand.substring(i, i + 2);
-                s.append(String.format("%1$02X", Integer.parseInt(str, 16)));
-            }
+        if(getMachineCode() == null) {
+            System.out.println(getMnemonic() + " " + getFormat());
         }
+        return String.format("%7s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getAddress() != null ? Integer.toHexString
+                (getAddress()).toUpperCase() : "",
 
-        String hexValueOfLiteral = s.toString().toUpperCase();
-
-        return hexValueOfLiteral;
+                getMachineCode() != "" ? Integer.toHexString(Integer.valueOf(getMachineCode(), 2)) : "").toUpperCase();
     }
 
     public Integer getByteInc() {
@@ -164,5 +140,27 @@ public abstract class Command {
 
     public Integer getWordInc() {
         return 3 * getOperand().replaceAll("\\s", "").trim().split("\\s*,\\s*").length;
+    }
+    public String getOperandHexValue() {
+        StringBuilder s = new StringBuilder();
+        String operand = this.getOperand();
+        operand.replace("=", "");
+        if (operand.startsWith("C")) {
+            operand = operand.replace("C", "").replace("'", "");
+            for (char ch : operand.toCharArray()) {
+                s.append(String.format("%x", (int) ch));
+            }
+        } else if (operand.startsWith("X")) {
+            operand = operand.replace("X", "").replace("'", "");
+            if (operand.length() % 2 == 1) {
+                operand = "0" + operand;
+            }
+            for (int i = 0; i < operand.length(); i += 2) {
+                String str = operand.substring(i, i + 2);
+                s.append(String.format("%1$02X", Integer.parseInt(str, 16)));
+            }
+        }
+        String hexValueOfLiteral = s.toString().toUpperCase();
+        return hexValueOfLiteral;
     }
 }

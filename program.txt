@@ -5,5 +5,6 @@ PROB2   START   1000
 ALPHA   RESW    3
 BETA    RESW    2
 GAMMA   RESW    1
-        WORD    1000, 1
+        BYTE C'EOF'
+        WORD 4096,4096
         END
