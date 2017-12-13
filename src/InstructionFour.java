@@ -6,7 +6,7 @@ public class InstructionFour extends Instruction {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
-    public void constructMachineCode(Assembler asm) {
+    public void constructMachineCode(Section sec) {
         System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
         char n, i, x = '0';
@@ -17,16 +17,16 @@ public class InstructionFour extends Instruction {
             i = '1';
         } else if (operand.startsWith("@")) {
             String sym = operand.substring(1);
-            address = Integer.toBinaryString(asm.getSymTab().getAddress(sym));
+            address = Integer.toBinaryString(sec.getSymTab().getAddress(sym));
             n = '1'; //n = 1, i = 1
             i = '0';
         } else {
             String[] tokens = operand.split("\\s*,\\s*");
             String sym = tokens[0];
-            if(asm.getExtRef().contains(sym))
+            if(sec.getExtRef().contains(sym))
                 address = "00000";
             else
-                address = Integer.toBinaryString(asm.getSymTab().getAddress(sym));
+                address = Integer.toBinaryString(sec.getSymTab().getAddress(sym));
             n = '1'; //n = 1, i = 1
             i = '1';
             x = tokens.length == 1 ? '0' : '1';

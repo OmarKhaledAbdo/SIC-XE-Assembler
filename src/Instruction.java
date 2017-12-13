@@ -34,7 +34,7 @@ public abstract class Instruction extends Command {
     }
 
     @Override
-    public Integer handle(Integer curAddress, Assembler asm) {
+    public Integer handle(Integer curAddress, Section sec) {
         return Integer.valueOf(format);
     }
 

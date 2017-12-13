@@ -117,8 +117,8 @@ public abstract class Command {
         this.opCode = opCode;
     }
 
-    abstract public Integer handle(Integer curAddress, Assembler asm);
-    abstract public void constructMachineCode(Assembler asm);
+    abstract public Integer handle(Integer curAddress, Section sec);
+    abstract public void constructMachineCode(Section sec);
 
 
 

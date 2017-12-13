@@ -3,7 +3,7 @@ public class InstructionOne extends Instruction {
         setFields(label, mnemonic, opCode, format, null);
     }
 
-    public void constructMachineCode(Assembler asm) {
+    public void constructMachineCode(Section sec) {
         machineCode = Integer.toHexString(opCode);
         machineCode = NumberUtils.adjustSize(machineCode, 2);
     }

@@ -33,7 +33,7 @@ public class Directive extends Command {
     }
 
     @Override
-    public void constructMachineCode(Assembler asm) {
+    public void constructMachineCode(Section sec) {
         machineCode = "";
         switch (mnemonic) {
             case "BYTE":
@@ -44,9 +44,9 @@ public class Directive extends Command {
                 break;
             case "BASE":
                 if (operand.startsWith("#")) {
-                    asm.setBaseAddr(Integer.valueOf(operand.substring(1), 16));
+                    sec.setBaseAddr(Integer.valueOf(operand.substring(1), 16));
                 } else {
-                    asm.setBaseAddr(asm.getSymTab().getAddress(operand));
+                    sec.setBaseAddr(sec.getSymTab().getAddress(operand));
                 }
                 break;
             default:
@@ -68,7 +68,7 @@ public class Directive extends Command {
     }
 
 
-    public Integer handle(Integer curAddr, Assembler asm) {
+    public Integer handle(Integer curAddr, Section sec) {
         Integer inc;
         switch (mnemonic) {
             case "RESB":
@@ -84,10 +84,10 @@ public class Directive extends Command {
                 inc = getWordInc();
                 break;
             case "LTORG":
-                inc = asm.getLitTab().addLiteralsToTable(curAddr);
+                inc = sec.getLitTab().addLiteralsToTable(curAddr);
                 break;
             case "END":
-                inc = asm.getLitTab().addLiteralsToTable(curAddr);
+                inc = sec.getLitTab().addLiteralsToTable(curAddr);
                 break;
             case "BASE":
                 inc = 0;
@@ -96,14 +96,14 @@ public class Directive extends Command {
                 inc = 0;
                 String[] tokens = operand.split("\\s*,\\s*");
                 for (String sym : tokens) {
-                    asm.getExtDef().add(sym);
+                    sec.getExtDef().add(sym);
                 }
                 break;
             case "EXTREF":
                 inc = 0;
                 tokens = operand.split("\\s*,\\s*");
                 for (String sym : tokens) {
-                    asm.getExtRef().add(sym);
+                    sec.getExtRef().add(sym);
                 }
                 break;
             default:

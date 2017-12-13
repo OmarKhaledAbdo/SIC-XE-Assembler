@@ -39,6 +39,8 @@ public class TextRecord {
         }
         if(body == null) {
             body = machineCode;
+        } else if(machineCode == "" || machineCode == null) {
+
         } else {
             body += " " + machineCode;
         }

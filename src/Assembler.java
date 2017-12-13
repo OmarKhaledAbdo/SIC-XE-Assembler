@@ -2,53 +2,16 @@ import java.util.*;
 
 class Assembler implements Printable {
 
-    private SymbolTable symTab = new SymbolTable();
-    private LiteralTable litTab = new LiteralTable();
-    private Program program;
+    private Section section;
     private ObjectProgram objectProgram = new ObjectProgram();
-    private Set <String> extRef = new HashSet<>();
-    private List <String> extDef = new ArrayList<>();
     private Integer lastUsedAddress;
-    private Integer baseAddr;
 
-    public List<String> getExtDef() {
-        return extDef;
+    public Section getSection() {
+        return section;
     }
 
-    public void setExtDef(List<String> extDef) {
-        this.extDef = extDef;
-    }
-
-    public Set<String> getExtRef() {
-        return extRef;
-    }
-
-    public void setExtRef(Set<String> extRef) {
-        this.extRef = extRef;
-    }
-
-    public SymbolTable getSymTab() {
-        return symTab;
-    }
-
-    public void setSymTab(SymbolTable symTab) {
-        this.symTab = symTab;
-    }
-
-    public LiteralTable getLitTab() {
-        return litTab;
-    }
-
-    public void setLitTab(LiteralTable litTab) {
-        this.litTab = litTab;
-    }
-
-    public Program getProgram() {
-        return program;
-    }
-
-    public void setProgram(Program program) {
-        this.program = program;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     public ObjectProgram getObjectProgram() {
@@ -67,54 +30,45 @@ class Assembler implements Printable {
         this.lastUsedAddress = lastUsedAddress;
     }
 
-    public Integer getBaseAddr() {
-        return baseAddr;
-    }
-
-    public void setBaseAddr(Integer baseAddr) {
-        this.baseAddr = baseAddr;
-    }
-
-
-    public Assembler(Program program) {
-        this.program = program;
+    public Assembler(Section section) {
+        this.section = section;
     }
 
     public void passOne() {
-        Integer startAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
+        Integer startAddr = Integer.parseInt(section.getCommands().get(0).getOperand(), 16);
         Integer curAddr = startAddr;
-        for (Command curCommand : program.getCommands()) {
-            symTab.addLabel(curCommand.getLabel(), curAddr);
-            litTab.addLiteral(curCommand);
+        for (Command curCommand : section.getCommands()) {
+            section.getSymTab().addLabel(curCommand.getLabel(), curAddr);
+            section.getLitTab().addLiteral(curCommand);
             curCommand.setAddress(curAddr);
-            curAddr += curCommand.handle(curAddr, this);
+            curAddr += curCommand.handle(curAddr, section);
         }
         lastUsedAddress = curAddr;
     }
 
     public void passTwo() {
-        Integer startAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
+        Integer startAddr = Integer.parseInt(section.getCommands().get(0).getOperand(), 16);
 
-        objectProgram.setHeaderRecord(new HeaderRecord(program.getCommands().get(0).getLabel(),
+        objectProgram.setHeaderRecord(new HeaderRecord(section.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
 
         DefRecord defRecord = new DefRecord();
-        for(String def : getExtDef()) {
-            defRecord.add(def,Integer.toHexString(symTab.getAddress(def)));
+        for(String def : section.getExtDef()) {
+            defRecord.add(def,Integer.toHexString(section.getSymTab().getAddress(def)));
             objectProgram.setDefRecord(defRecord);
         }
 
         RefRecord refRecord = new RefRecord();
-        for(String ref : getExtRef()) {
+        for(String ref : section.getExtRef()) {
             refRecord.add(ref);
             objectProgram.setRefRecord(refRecord);
         }
 
         Integer curLiteralPool = 0;
-        for (Command curCommand : program.getCommands()) {
-            curCommand.constructMachineCode(this);
+        for (Command curCommand : section.getCommands()) {
+            curCommand.constructMachineCode(section);
             if(curCommand.getMnemonic().equals("LTORG") || curCommand.getMnemonic().equals("END")) {
-                Literal [] literals = litTab.getLiteralPool(curLiteralPool);
+                Literal [] literals = section.getLitTab().getLiteralPool(curLiteralPool);
                 for (Literal literal : literals) {
                     objectProgram.addToTextRecords(null, literal.getValue(), literal.getAddress());
                 }
@@ -127,9 +81,9 @@ class Assembler implements Printable {
         objectProgram.setEndRecord(new EndRecord(startAddr));
     }
     public void print() {
-        program.print();
-        symTab.print();
-        litTab.print();
+        section.print();
+        section.getSymTab().print();
+        section.getLitTab().print();
         objectProgram.print();
     }
 }

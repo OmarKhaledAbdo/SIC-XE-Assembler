@@ -18,7 +18,7 @@ public class InstructionTwo extends Instruction {
     public InstructionTwo(String label, String mnemonic, Integer opCode, String format, String operand) {
         setFields(label, mnemonic, opCode, format, operand);
     }
-    public void constructMachineCode(Assembler asm) {
+    public void constructMachineCode(Section sec) {
         String[] registers = operand.split("\\s*,\\s*");
 //        for (String x : registers) {
 //            System.out.println(x);

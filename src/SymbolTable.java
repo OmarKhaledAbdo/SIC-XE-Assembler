@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 public class SymbolTable implements  Printable{
+
     private Map<String, Integer> symTab = new HashMap<>();
     public void addLabel(String key, Integer value) {
         if(key != null) {
