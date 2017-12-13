@@ -1,0 +1,17 @@
+PROB2   START   1000
+        +LDA     ALPHA
+        ADD     BETA
+        LDA     =X'05'
+        STA     GAMMA
+        LDA     =C'EOF'
+        LTORG
+        LDA     =X'06'
+        STA     GAMMA
+        LDA     =C'ABC'
+        LTORG
+        LDA     =C'DDD'
+ALPHA   RESW    3
+BETA    RESW    2
+GAMMA   RESW    1
+        WORD    1000, 1
+        END
