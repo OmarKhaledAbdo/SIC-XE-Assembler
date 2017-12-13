@@ -97,8 +97,6 @@ public class Directive extends Command {
                 String[] tokens = operand.split("\\s*,\\s*");
                 for (String sym : tokens) {
                     asm.getExtDef().add(sym);
-
-                    System.out.println(asm.getExtDef());
                 }
                 break;
             case "EXTREF":
@@ -106,8 +104,6 @@ public class Directive extends Command {
                 tokens = operand.split("\\s*,\\s*");
                 for (String sym : tokens) {
                     asm.getExtRef().add(sym);
-
-                    System.out.println(asm.getExtRef());
                 }
                 break;
             default:

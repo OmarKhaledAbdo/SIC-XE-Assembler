@@ -2,7 +2,9 @@ import java.util.ArrayList;
 
 public class ObjectProgram implements Printable{
     private HeaderRecord headerRecord;
+    private DefRecord defRecord;
 
+    private RefRecord refRecord;
     private EndRecord endRecord;
     private ArrayList<TextRecord> textRecords = new ArrayList<>();
 
@@ -17,6 +19,14 @@ public class ObjectProgram implements Printable{
     public EndRecord getEndRecord() {
         return endRecord;
     }
+
+    public DefRecord getDefRecord() { return defRecord; }
+
+    public void setDefRecord(DefRecord defRecord) { this.defRecord = defRecord; }
+
+    public RefRecord getRefRecord() { return refRecord; }
+
+    public void setRefRecord(RefRecord refRecord) { this.refRecord = refRecord; }
 
     public void setEndRecord(EndRecord endRecord) {
         this.endRecord = endRecord;
@@ -51,10 +61,12 @@ public class ObjectProgram implements Printable{
 
     @Override
     public void print() {
-        String startAddr = NumberUtils.adjustSize(Integer.toHexString(getEndRecord().getStartAddr()),6);
-        String programLength = NumberUtils.adjustSize(Integer.toHexString(getHeaderRecord().getLength()),6);
+        String startAddr = NumberUtils.adjustSize(Integer.toHexString(getEndRecord().getStartAddr()),6).toUpperCase();
+        String programLength = NumberUtils.adjustSize(Integer.toHexString(getHeaderRecord().getLength()),6).toUpperCase();
         System.out.println("HTE Record:");
         System.out.println("H " + getHeaderRecord().getProgramName() + " " + startAddr + " " + programLength);
+        System.out.println("D " + getDefRecord().getBody().toUpperCase());
+        System.out.println("R " + getRefRecord().getBody().toUpperCase());
         for(TextRecord record : getTextRecords()) {
             String firstExec = NumberUtils.adjustSize(Integer.toHexString(record.getFirstExec()),6);
             String recordLength = NumberUtils.adjustSize(Integer.toHexString(record.getLength()/2).toUpperCase(),2);

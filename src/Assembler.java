@@ -98,6 +98,18 @@ class Assembler implements Printable {
         objectProgram.setHeaderRecord(new HeaderRecord(program.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
 
+        DefRecord defRecord = new DefRecord();
+        for(String def : getExtDef()) {
+            defRecord.add(def,Integer.toHexString(symTab.getAddress(def)));
+            objectProgram.setDefRecord(defRecord);
+        }
+
+        RefRecord refRecord = new RefRecord();
+        for(String ref : getExtRef()) {
+            refRecord.add(ref);
+            objectProgram.setRefRecord(refRecord);
+        }
+
         Integer curLiteralPool = 0;
         for (Command curCommand : program.getCommands()) {
             curCommand.constructMachineCode(this);
