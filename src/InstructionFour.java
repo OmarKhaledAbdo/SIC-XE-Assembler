@@ -13,14 +13,17 @@ public class InstructionFour extends Instruction {
             n = '0';
             i = '1';
         } else if (operand.startsWith("@")) {
-            String symb = operand.substring(1);
-            address = Integer.toBinaryString(asm.getSymTab().getAddress(symb));
+            String sym = operand.substring(1);
+            address = Integer.toBinaryString(asm.getSymTab().getAddress(sym));
             n = '1'; //n = 1, i = 1
             i = '0';
         } else {
             String[] tokens = operand.split("\\s*,\\s*");
-            String symb = tokens[0];
-            address = Integer.toBinaryString(asm.getSymTab().getAddress(symb));
+            String sym = tokens[0];
+            if(asm.getExtRef().contains(sym))
+                address = "00000";
+            else
+                address = Integer.toBinaryString(asm.getSymTab().getAddress(sym));
             n = '1'; //n = 1, i = 1
             i = '1';
             x = tokens.length == 1 ? '0' : '1';

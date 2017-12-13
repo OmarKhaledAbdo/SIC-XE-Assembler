@@ -23,7 +23,7 @@ public class SymbolTable implements  Printable{
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             Integer addr = (Integer) pair.getValue();
-            System.out.println(pair.getKey() + "   " + Integer.toHexString(addr).toUpperCase());
+            System.out.println(pair.getKey() + "\t\t" + Integer.toHexString(addr).toUpperCase());
             it.remove(); // avoids a ConcurrentModificationException
         }
     }

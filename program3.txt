@@ -1,19 +1,29 @@
 PROB2   START   0000
-        LDA    #0
+        EXTDEF  BUFFER,LENGTH
+        EXTREF  RDREC,WRREC
+        LDA     #0
         STA     C
+        LDA     LENGTH
         LDT     #600
         LDX     #0
+        +JSUB   RDREC
         LDS     #3
+        LDA     BUFFER
 LOOP    LDA     TABLE + 4
         COMP    #0
         JEQ     NEXT
+        LDA     =C'EOF'
         LDA     C
+        +JSUB   WRREC
         ADD     #1
         STA     C
+        LTORG
         STA     C, X
 NEXT    ADDR    S,X
         COMPR   X,T
         JLT     LOOP
 TABLE   RESW    200
+LENGTH  RESW    1
 C       RESW    1
+BUFFER  RESW    4096
         END
