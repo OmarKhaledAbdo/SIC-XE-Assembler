@@ -10,28 +10,34 @@ public abstract class Command {
     protected boolean directive;
     protected String machineCode;
     protected Integer opCode;
-    //protected List <String> extRef = new ArrayList<>();
-
-
     protected List <String> extRef = new ArrayList<>();
 
     public Command() {
     }
 
     public static Command create(String[] tokens, OpCodeTable opTab) {
+        try {
+            if(tokens.length == 0) {
+                throw new IllegalArgumentException();
+            }
+        } catch (Exception e) {
+           System.out.println("Check input file for empty lines");
+        }
+
+
         Integer index = 0;
         String label = null;
 
-        for (int i = 0; i < tokens.length; i++) {
-            System.out.print(tokens[i] + " ");
-        }
-        System.out.println();
 
+//        for (int i = 0; i < tokens.length; i++) {
+//            System.out.print(tokens[i] + " ");
+//        }
+//        System.out.println(tokens[index]);
+//        System.out.println(tokens.length);
 
         if (!opTab.containsKey(tokens[index])) {
             label = tokens[index++];
         }
-
         String mnemonic = tokens[index++];
         String format = opTab.getFormat(mnemonic);
 

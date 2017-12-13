@@ -88,11 +88,11 @@ public class InstructionThree extends Instruction {
             Integer targetAddr = sec.getLitTab().getLiteralAddr(val);
             setRelativity(targetAddr, sec.getBaseAddr());
         } else {  //Simple, op m, x OR op c, x
-            String[] operands = operand.split("\\s*(?=[-+,])\\s*");
+            String[] operands = operand.split("(?=[-+,])");
             n = '1';
             i = '1';
             //mem, X OR mem OR mem + constant
-            x = (operands.length == 1  || operands[1].charAt(0) != ',') ? '0' : '1';
+            x = (operands.length == 2  && operands[1].charAt(1) == ',') ? '1' : '0';
             Integer targetAddr = sec.getSymTab().getAddress(operands[0]);
             if (operands.length > 1 && operands[1].charAt(0) != ',' ) {
                 targetAddr += (operands[1].charAt(0) == '+' ? 1 : -1) * Integer.valueOf(operands[1].substring(1), 10);
