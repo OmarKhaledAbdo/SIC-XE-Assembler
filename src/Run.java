@@ -1,7 +1,7 @@
 public class Run {
     public static void main(String[] args) {
         OpCodeTable opTab = new OpCodeTable("InstructionSet.txt");
-        Program program = new Program("program4.txt", opTab);
+        Program program = new Program("program5.txt", opTab);
         Assembler asm = new Assembler(program);
         asm.passOne();
         asm.passTwo();

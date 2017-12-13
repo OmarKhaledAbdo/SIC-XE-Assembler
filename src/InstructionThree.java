@@ -13,8 +13,11 @@ public class InstructionThree extends Instruction {
 
     private void setRelativity(Integer targetAddr, Integer baseAddr) {
         Integer pc = address + Integer.valueOf(format, 10);
+
+        //System.out.println("TargetAddress " + targetAddr + "\n\n");
+
         Integer diff = targetAddr - pc;
-        if (diff > 2047) { //Base Relative
+        if (diff > 2047 || diff < -2048) { //Base Relative
             try {
                 diff = targetAddr - baseAddr;
                 if (diff > 4095 || diff < 0) {
@@ -23,18 +26,10 @@ public class InstructionThree extends Instruction {
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
+            //System.out.println("BASE\n");
             b = '1';
             p = '0';
         } else {
-            try {
-                if (diff < -2048) {
-                    throw new Exception("Negative and smaller than PC range");
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
-//            System.out.println("PC relative");
-//            System.out.println("Diff " + diff);
             b = '0';
             p = '1';
         }
@@ -42,16 +37,11 @@ public class InstructionThree extends Instruction {
     }
 
     public void constructMachineCode(Assembler asm) {
-        //Special case
         if (mnemonic.equals("RSUB")) {
-            machineCode = trimmedOpcode() + "110000000000000000";
+            machineCode = "4F0000";
             return;
         }
-
-        //System.out.println(mnemonic + " " + operand);
-
         operand = operand.replace(" ", "");
-
         if (operand.startsWith("@")) { //indirect
             //invariants
             n = '1';
@@ -102,18 +92,11 @@ public class InstructionThree extends Instruction {
             n = '1';
             i = '1';
             //mem, X OR mem OR mem + constant
-            x = operands.length == 1  || !operands[1].equals(",") ? '0' : '1';
-
+            x = (operands.length == 1  || operands[1].charAt(0) != ',') ? '0' : '1';
             Integer targetAddr = asm.getSymTab().getAddress(operands[0]);
-//            System.out.println("Operands " + operands[0]);
-//            if(operands.length > 1)
-//            System.out.println("Operands " + operands[1]);
-
-            // +Constant
             if (operands.length > 1 && operands[1].charAt(0) != ',' ) {
                 targetAddr += (operands[1].charAt(0) == '+' ? 1 : -1) * Integer.valueOf(operands[1].substring(1), 10);
             }
-
             setRelativity(targetAddr, asm.getBaseAddr());
         }
         machineCode = trimmedOpcode() + n + i + x + b + p + e + disp;

@@ -20,9 +20,9 @@ public class InstructionTwo extends Instruction {
     }
     public void constructMachineCode(Assembler asm) {
         String[] registers = operand.split("\\s*,\\s*");
-        for (String x : registers) {
-            System.out.println(x);
-        }
+//        for (String x : registers) {
+//            System.out.println(x);
+//        }
         String regA = Integer.toBinaryString(reg.get(registers[0]));
         String regB = "0";
         if(registers.length == 2) {

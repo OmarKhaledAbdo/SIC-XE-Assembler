@@ -6,6 +6,5 @@ public class InstructionOne extends Instruction {
     public void constructMachineCode(Assembler asm) {
         machineCode = Integer.toHexString(opCode);
         machineCode = NumberUtils.adjustSize(machineCode, 2);
-        machineCode = NumberUtils.adjustSize(NumberUtils.binaryToHex(machineCode),2);
     }
 }

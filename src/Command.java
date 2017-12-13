@@ -123,7 +123,7 @@ public abstract class Command {
         if (getMachineCode() == null) {
             System.out.println(getMnemonic() + " " + getFormat());
         }
-        return String.format("%7s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getAddress() != null ? Integer.toHexString
+        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand() == null ? "" : getOperand(), getAddress() != null ? Integer.toHexString
                 (getAddress()).toUpperCase() : "", getMachineCode() != "" ? getMachineCode() : "");
     }
 
