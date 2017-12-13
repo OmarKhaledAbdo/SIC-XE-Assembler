@@ -47,5 +47,3 @@ public class TextRecord {
         length += machineCode.length();
     }
 }
-
-

@@ -10,7 +10,10 @@ public abstract class Command {
     protected boolean directive;
     protected String machineCode;
     protected Integer opCode;
-    protected List<String> extRef = new ArrayList<>();
+    //protected List <String> extRef = new ArrayList<>();
+
+
+    protected List <String> extRef = new ArrayList<>();
 
     public Command() {
     }
