@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Command {
     protected String format;
     protected String label;
@@ -7,7 +10,7 @@ public abstract class Command {
     protected boolean directive;
     protected String machineCode;
     protected Integer opCode;
-
+    protected List<String> extRef = new ArrayList<>();
 
     public Command() {
     }

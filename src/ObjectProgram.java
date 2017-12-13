@@ -70,7 +70,7 @@ public class ObjectProgram implements Printable{
         for(TextRecord record : getTextRecords()) {
             String firstExec = NumberUtils.adjustSize(Integer.toHexString(record.getFirstExec()),6);
             String recordLength = NumberUtils.adjustSize(Integer.toHexString(record.getLength()/2).toUpperCase(),2);
-            System.out.println("T " + firstExec.toUpperCase() + " " + recordLength.toUpperCase() + record.getBody().toUpperCase());
+            System.out.println("T " + firstExec.toUpperCase() + " " + recordLength.toUpperCase() + " " + record.getBody().toUpperCase());
         }
         System.out.println("E " + startAddr);
     }

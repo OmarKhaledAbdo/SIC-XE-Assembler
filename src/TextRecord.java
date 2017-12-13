@@ -34,6 +34,9 @@ public class TextRecord {
     }
 
     public  void addToBody (String machineCode) {
+        if(machineCode.isEmpty()) {
+            return;
+        }
         if(body == null) {
             body = machineCode;
         } else {
