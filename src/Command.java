@@ -16,7 +16,6 @@ public abstract class Command {
         Integer index = 0;
         String label = null;
 
-
         for (int i = 0; i < tokens.length; i++) {
             System.out.print(tokens[i] + " ");
         }
