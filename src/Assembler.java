@@ -76,6 +76,7 @@ class Assembler implements Printable {
             } else {
                 objectProgram.addToTextRecords(curCommand.getMnemonic(), curCommand.getMachineCode(), curCommand.getAddress());
             }
+
         }
 
         objectProgram.setEndRecord(new EndRecord(startAddr));

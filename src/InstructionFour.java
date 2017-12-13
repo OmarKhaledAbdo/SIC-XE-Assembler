@@ -1,20 +1,16 @@
 public class InstructionFour extends Instruction {
-
-    Boolean absolute = false;
-
     public InstructionFour(String label, String mnemonic, Integer opCode, String format, String operand) {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
     public void constructMachineCode(Section sec) {
-        System.out.println(mnemonic + " " + trimmedOpcode());
+        //System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
         char n, i, x = '0';
         if (operand.startsWith("#")) {
             String[] operands = operand.replace("#", "").split("(?=[-+])");
-            Integer absValue = 0;
             operands[0] = "+" + operands[0];
-            Integer relativeDiff = 0;
+            Integer absValue = 0, relativeDiff = 0;
             for (String operand : operands) {
                 if (sec.getExtRef().contains(operand.substring(1))) {
                     extRef.add(operand.substring(1));
@@ -36,10 +32,11 @@ public class InstructionFour extends Instruction {
             n = '1'; //n = 1, i = 1
             i = '0';
         } else {
-            //etc: listA + 4
+            //etc: listA + 4, listA, X
             Integer addressValue;
             String[] operands = operand.replace(" ", "").split("(?=[-,+])");
             if (sec.getExtRef().contains(operands[0])) {
+                extRef.add(operands[0]);
                 addressValue = 0;
                 absolute = true;
             } else {
@@ -47,13 +44,13 @@ public class InstructionFour extends Instruction {
                 addressValue = sec.getSymTab().getAddress(operands[0]);
             }
             //+ Constant
-            if (operands.length > 1 && operands[1].charAt(0) != ',' ) {
+            if (operands.length > 1 && operands[1].charAt(0) != ',') {
                 addressValue += (operands[1].charAt(0) == '+' ? 1 : -1) * Integer.valueOf(operands[1].substring(1), 10);
             }
             address = Integer.toBinaryString(addressValue);
             n = '1'; //n = 1, i = 1
             i = '1';
-            x = (operands.length == 1  || operands[1].charAt(0) != ',') ? '0' : '1';
+            x = (operands.length == 2 && operands[1].charAt(0) == ',') ? '1' : '0';
 
         }
         address = NumberUtils.adjustSize(address, 20);

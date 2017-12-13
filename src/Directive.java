@@ -1,5 +1,6 @@
 public class Directive extends Command {
 
+
     public Directive(String label, String mnemonic, String operand) {
         setLabel(label);
         setMnemonic(mnemonic);
@@ -24,7 +25,7 @@ public class Directive extends Command {
 
     @Override
     public String toString() {
-        if(getMachineCode() == null) {
+        if (getMachineCode() == null) {
             System.out.println(getMnemonic() + " " + getFormat());
         }
         return String.format("%7s %s %s Addr: %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand() != null ? getOperand() : "",
@@ -40,7 +41,12 @@ public class Directive extends Command {
                 machineCode = getOperandHexValue();
                 break;
             case "WORD":
-                machineCode = getWordHexValue();
+                if (operand.indexOf('+') == -1 && operand.indexOf('-') == -1) {
+                    machineCode = getWordHexValue();
+                    absolute = true;
+                } else { //expression
+                    machineCode = getWordExpressionValue(sec);
+                }
                 break;
             case "BASE":
                 if (operand.startsWith("#")) {
@@ -53,11 +59,30 @@ public class Directive extends Command {
         }
     }
 
+    public String getWordExpressionValue(Section sec) {
+        Integer absValue = 0, relativeDiff = 0;
+        String[] operands = operand.replace(" ", "").split("(?=[-+])");
+        operands[0] = "+" + operands[0];
+        for (String operand : operands) {
+            if (sec.getExtRef().contains(operand.substring(1))) {
+                extRef.add(operand.substring(1));
+            } else if (sec.getSymTab().containsLabel(operand.substring(1))) {
+                relativeDiff += (operand.charAt(0) == '+' ? 1 : -1);
+                absValue = (operand.charAt(0) == '+' ? 1 : -1) * sec.getSymTab().getAddress(operand.substring(1));
+            } else {
+                absValue += (operand.charAt(0) == '+' ? 1 : -1) * Integer.valueOf(operand.substring(1), 10);
+            }
+        }
+        absolute = relativeDiff == 0;
+        String hexValue = NumberUtils.adjustSize(Integer.toHexString(absValue), 6);
+        return hexValue;
+    }
+
     public String getWordHexValue() {
         String[] operands = operand.split("\\s*,\\s*");
         //System.out.println(operands.length);
         StringBuilder str = new StringBuilder();
-        for(String operand : operands) {
+        for (String operand : operands) {
             System.out.println(operand);
             String val = Integer.toHexString(Integer.valueOf(operand, 10));
             // Word = 3 bytes = 6 Hex Digits
@@ -66,8 +91,6 @@ public class Directive extends Command {
         }
         return str.toString();
     }
-
-
     public Integer handle(Integer curAddr, Section sec) {
         Integer inc;
         switch (mnemonic) {
