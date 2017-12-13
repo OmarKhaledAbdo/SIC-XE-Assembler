@@ -27,10 +27,11 @@ public class Directive extends Command {
         if(getMachineCode() == null) {
             System.out.println(getMnemonic() + " " + getFormat());
         }
-        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand() != null ? getOperand() : "",
+        return String.format("%7s %s %s Addr: %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand() != null ? getOperand() : "",
                 getAddress() != null ? Integer.toHexString(getAddress()).toUpperCase() : "",
                 getMachineCode().toUpperCase());
     }
+
     @Override
     public void constructMachineCode(Assembler asm) {
         machineCode = "";
@@ -41,11 +42,20 @@ public class Directive extends Command {
             case "WORD":
                 machineCode = getWordHexValue();
                 break;
+            case "BASE":
+                if (operand.startsWith("#")) {
+                    asm.setBaseAddr(Integer.valueOf(operand.substring(1), 16));
+                } else {
+                    asm.setBaseAddr(asm.getSymTab().getAddress(operand));
+                }
+                break;
+            default:
         }
     }
+
     public String getWordHexValue() {
         String[] operands = operand.split("\\s*,\\s*");
-        System.out.println(operands.length);
+        //System.out.println(operands.length);
         StringBuilder str = new StringBuilder();
         for(String operand : operands) {
             System.out.println(operand);
@@ -56,8 +66,10 @@ public class Directive extends Command {
         }
         return str.toString();
     }
+
+
     public Integer handle(Integer curAddr, Assembler asm) {
-        Integer inc = 0;
+        Integer inc;
         switch (mnemonic) {
             case "RESB":
                 inc = 1 * Integer.parseInt(operand);
@@ -79,8 +91,23 @@ public class Directive extends Command {
                 break;
             case "BASE":
                 inc = 0;
-                asm.setBaseAddr(Integer.valueOf(operand, 16));
                 break;
+            case "EXTDEF":
+                inc = 0;
+                String[] tokens = operand.split("\\s*,\\s*");
+                for (String sym : tokens) {
+                    asm.getExtDef().add(sym);
+                }
+                break;
+            case "EXTREF":
+                inc = 0;
+                tokens = operand.split("\\s*,\\s*");
+                for (String sym : tokens) {
+                    asm.getExtDef().add(sym);
+                }
+                break;
+            default:
+                inc = 0;
         }
         return inc;
     }

@@ -16,6 +16,13 @@ public abstract class Command {
         Integer index = 0;
         String label = null;
 
+
+        for (int i = 0; i < tokens.length; i++) {
+            System.out.print(tokens[i] + " ");
+        }
+        System.out.println();
+
+
         if (!opTab.containsKey(tokens[index])) {
             label = tokens[index++];
         }
@@ -34,7 +41,6 @@ public abstract class Command {
             }else {
                 operand += " " + tokens[index];
             }
-
         }
         //System.out.println("Operand " + operand + "\n");
         if (isDirective) {
@@ -109,20 +115,19 @@ public abstract class Command {
         this.opCode = opCode;
     }
 
-
     abstract public Integer handle(Integer curAddress, Assembler asm);
-
     abstract public void constructMachineCode(Assembler asm);
 
+
+
     public String toString() {
-        if(getMachineCode() == null) {
+        if (getMachineCode() == null) {
             System.out.println(getMnemonic() + " " + getFormat());
         }
         return String.format("%7s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getAddress() != null ? Integer.toHexString
-                (getAddress()).toUpperCase() : "",
-
-                getMachineCode() != "" ? Integer.toHexString(Integer.valueOf(getMachineCode(), 2)) : "").toUpperCase();
+                (getAddress()).toUpperCase() : "", getMachineCode() != "" ? getMachineCode() : "");
     }
+
 
     public Integer getByteInc() {
         //System.out.println("Operand " + operand);
@@ -145,14 +150,16 @@ public abstract class Command {
         System.out.println(operand + " incValue " + incValue);
         return incValue;
     }
-
     public Integer getWordInc() {
+//        System.out.println("Operand " + getOperand());
+//        System.out.println(3 * getOperand().replaceAll("\\s", "").trim().split("\\s*,\\s*").length + "\n\n");
         return 3 * getOperand().replaceAll("\\s", "").trim().split("\\s*,\\s*").length;
     }
     public String getOperandHexValue() {
         StringBuilder s = new StringBuilder();
         String operand = this.getOperand();
-        operand.replace("=", "");
+        //System.out.println(operand);
+        operand = operand.replace("=", "");
         if (operand.startsWith("C")) {
             operand = operand.replace("C", "").replace("'", "");
             for (char ch : operand.toCharArray()) {
@@ -168,7 +175,8 @@ public abstract class Command {
                 s.append(String.format("%1$02X", Integer.parseInt(str, 16)));
             }
         }
-        String hexValueOfLiteral = s.toString().toUpperCase();
-        return hexValueOfLiteral;
+        String hexValue = s.toString().toUpperCase();
+        //System.out.println("Hex value " + hexValue);
+        return hexValue;
     }
 }

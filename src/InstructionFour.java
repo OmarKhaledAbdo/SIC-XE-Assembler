@@ -3,14 +3,6 @@ public class InstructionFour extends Instruction {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
-    public String toString() {
-        String machineCode = Integer.toHexString(Integer.valueOf(getMachineCode(), 2)).toUpperCase();
-        machineCode = NumberUtils.adjustSize(machineCode, 8);
-        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand(),
-                getAddress() != null ? Integer.toHexString(getAddress()).toUpperCase() : "", machineCode);
-
-    }
-
     public void constructMachineCode(Assembler asm) {
         System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
@@ -36,5 +28,6 @@ public class InstructionFour extends Instruction {
         address = NumberUtils.adjustSize(address, 20);
         String bpe = "001";
         machineCode = trimmedOpcode() + n + i + x + bpe + address;
+        machineCode = NumberUtils.adjustSize(NumberUtils.binaryToHex(machineCode),8);
     }
 }

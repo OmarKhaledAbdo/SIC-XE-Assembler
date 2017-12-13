@@ -11,13 +11,6 @@ public class InstructionThree extends Instruction {
         setFields(label, mnemonic, opCode, format, operand);
     }
 
-    public String toString() {
-        String machineCode = Integer.toHexString(Integer.valueOf(getMachineCode(), 2)).toUpperCase();
-        machineCode = NumberUtils.adjustSize(machineCode, 6);
-        return String.format("%7s %s %s %s %s", getLabel() != null ? getLabel() : "", getMnemonic(), getOperand(),
-                getAddress() != null ? Integer.toHexString(getAddress()).toUpperCase() : "", machineCode);
-    }
-
     private void setRelativity(Integer targetAddr, Integer baseAddr) {
         Integer pc = address + Integer.valueOf(format, 10);
         Integer diff = targetAddr - pc;
@@ -76,6 +69,7 @@ public class InstructionThree extends Instruction {
             n = '0';
             i = '1';
             x = '0';
+            // #BUFF, BUFF
             if (asm.getSymTab().containsLabel(operand.substring(1))) {
                 String symb = operand.substring(1);
                 Integer targetAddr = asm.getSymTab().getAddress(symb);
@@ -100,14 +94,10 @@ public class InstructionThree extends Instruction {
             x = tokens.length == 1 ? '0' : '1';
             String operandOne = tokens[0];
             Integer targetAddr = asm.getSymTab().getAddress(operandOne);
-            //System.out.println("OperandOne " + operandOne + " TargetAddr " + targetAddr);
             setRelativity(targetAddr, asm.getBaseAddr());
-//            } else {
-//                Integer targetAddr = Integer.valueOf(operandOne, 10);
-//                disp = NumberUtils.adjustSize(Integer.toBinaryString(targetAddr), 12);
-//            }
         }
         machineCode = trimmedOpcode() + n + i + x + b + p + e + disp;
+        machineCode = NumberUtils.adjustSize(NumberUtils.binaryToHex(machineCode),6);
         //System.out.println(machineCode);
     }
 }

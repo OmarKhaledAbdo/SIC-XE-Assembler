@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class InstructionTwo extends Instruction {
 
-   final private static HashMap <String, Integer> reg;
+    final private static HashMap <String, Integer> reg;
     static {
         reg = new HashMap<>();
         reg.put("A", 0);
@@ -31,5 +31,6 @@ public class InstructionTwo extends Instruction {
         regA = NumberUtils.adjustSize(regA, 4);
         regB = NumberUtils.adjustSize(regB, 4);
         machineCode = Integer.toBinaryString(opCode) + regA + regB;
+        machineCode = NumberUtils.adjustSize(NumberUtils.binaryToHex(machineCode),4);
     }
 }

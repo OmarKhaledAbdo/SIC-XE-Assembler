@@ -1,0 +1,18 @@
+PROB2   START   0000
+        LDA    #0
+        STA     C
+        LDT     #600
+        LDX     #0
+        LDS     #3
+LOOP    LDA     TABLE,X
+        COMP    #0
+        JEQ     NEXT
+        LDA     C
+        ADD     #1
+        STA     C
+NEXT    ADDR    S,X
+        COMPR   X,T
+        JLT     LOOP
+TABLE   RESW    200
+C       RESW    1
+        END

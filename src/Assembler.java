@@ -1,11 +1,31 @@
+import java.util.*;
+
 class Assembler implements Printable {
 
     private SymbolTable symTab = new SymbolTable();
     private LiteralTable litTab = new LiteralTable();
     private Program program;
     private ObjectProgram objectProgram = new ObjectProgram();
+    private Set <String> extRef = new HashSet<>();
+    private List <String> extDef = new ArrayList<>();
     private Integer lastUsedAddress;
     private Integer baseAddr;
+
+    public List<String> getExtDef() {
+        return extDef;
+    }
+
+    public void setExtDef(List<String> extDef) {
+        this.extDef = extDef;
+    }
+
+    public Set<String> getExtRef() {
+        return extRef;
+    }
+
+    public void setExtRef(Set<String> extRef) {
+        this.extRef = extRef;
+    }
 
     public SymbolTable getSymTab() {
         return symTab;
@@ -74,12 +94,22 @@ class Assembler implements Printable {
 
     public void passTwo() {
         Integer startAddr = Integer.parseInt(program.getCommands().get(0).getOperand(), 16);
+
         objectProgram.setHeaderRecord(new HeaderRecord(program.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
 
+        Integer curLiteralPool = 0;
         for (Command curCommand : program.getCommands()) {
             curCommand.constructMachineCode(this);
-            objectProgram.addToTextRecords(curCommand.getMachineCode(), curCommand.getAddress());
+            if(curCommand.getMnemonic().equals("LTORG") || curCommand.getMnemonic().equals("END")) {
+                Literal [] literals = litTab.getLiteralPool(curLiteralPool);
+                for (Literal literal : literals) {
+                    objectProgram.addToTextRecords(null, literal.getValue(), literal.getAddress());
+                }
+                curLiteralPool++;
+            } else {
+                objectProgram.addToTextRecords(curCommand.getMnemonic(), curCommand.getMachineCode(), curCommand.getAddress());
+            }
         }
 
         objectProgram.setEndRecord(new EndRecord(startAddr));
@@ -88,5 +118,6 @@ class Assembler implements Printable {
         program.print();
         symTab.print();
         litTab.print();
+        objectProgram.print();
     }
 }

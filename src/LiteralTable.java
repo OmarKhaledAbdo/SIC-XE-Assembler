@@ -1,45 +1,34 @@
 import java.util.*;
 
 public class LiteralTable implements Printable {
-    private class LitTableData {
-        private String value;
-        private Integer length;
-        private Integer address;
-        public LitTableData(Instruction curCommand) {
-            this.value = curCommand.getOperandHexValue();
-            this.length = curCommand.getByteInc();
-            this.address = null; //Address still undetermined
-        }
-        public String toString() {
-            return String.format("Value: %s"  + " Length: %s"  + " Address: %s",
-                    value, length, Integer.toHexString(address).toUpperCase());
-        }
-    }
 
-    private Map<String, LitTableData> litTab = new HashMap<>();
-    private List<LitTableData> auxArray = new ArrayList<>();
-    private List<ArrayList<LitTableData>> literalPool = new ArrayList<>();
+
+    private Map<String, Literal> litTab = new HashMap<>();
+    private List<Literal> auxArray = new ArrayList<>();
+    private List<ArrayList<Literal>> literalPool = new ArrayList<>();
     private Integer curLiteralPool = 0;
 
     public void addLiteral(Command curComm) {
         if (curComm.getOperand() != null && curComm.getOperand().startsWith("=")) {
             if (!litTab.containsKey(curComm.getOperand())) {
-                LitTableData literal = new LitTableData((Instruction)curComm);
-                litTab.put(literal.value, literal);
+                Literal literal = new Literal((Instruction)curComm);
+                //System.out.println("Put to literal tabe");
+                litTab.put(literal.getValue(), literal);
                 auxArray.add(literal);
             }
         }
     }
 
     public Integer addLiteralsToTable(Integer curAddr) {
+        //System.out.println("Add to Literal Table");
         Integer inc = 0;
         literalPool.add(new ArrayList<>());
-        for (LitTableData literal : auxArray) {
-            if (litTab.get(literal.value).address == null) {
-                litTab.get(literal.value).address = curAddr;
+        for (Literal literal : auxArray) {
+            if (litTab.get(literal.getValue()).getAddress() == null) {
+                litTab.get(literal.getValue()).setAddress(curAddr);
                 literalPool.get(curLiteralPool).add(literal);
-                curAddr += literal.length;
-                inc += literal.length;
+                curAddr += literal.getLength();
+                inc += literal.getLength();
             }
         }
         curLiteralPool++;
@@ -49,16 +38,32 @@ public class LiteralTable implements Printable {
 
     public Integer getLiteralAddr (String val) {
         try {
-            return litTab.get(val).address;
+            return litTab.get(val).getAddress();
         } catch (NullPointerException e) {
             System.out.println("Literal not in literal table");
         }
         return 0;
     }
 
+    public Literal[] getLiteralPool(int literalIndex) {
+        try {
+            if(literalIndex >= literalPool.size()) {
+                throw new IllegalArgumentException();
+            }
+        } catch (Exception e) {
+            System.out.print("LiteralIndex out of range of literalPools");
+        }
+       Literal[] literalValues = new Literal[literalPool.get(literalIndex).size()];
+        for(int i = 0; i < literalValues.length; i++) {
+            literalValues[i] = literalPool.get(literalIndex).get(i);
+        }
+        return literalValues;
+    }
+
     public void print() {
-        System.out.println("\nLiteral Table:\n");
+        System.out.println("\nLiteral Table:\n" + litTab.size());
         Iterator it = litTab.entrySet().iterator();
+
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             System.out.println(pair.getValue());
