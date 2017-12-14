@@ -7,6 +7,7 @@ public class ObjectProgram implements Printable{
     private RefRecord refRecord;
     private EndRecord endRecord;
     private ArrayList<TextRecord> textRecords = new ArrayList<>();
+    private ArrayList<ModificationRecord> modificationRecords = new ArrayList<>();
 
     public HeaderRecord getHeaderRecord() {
         return headerRecord;
@@ -30,6 +31,14 @@ public class ObjectProgram implements Printable{
 
     public void setEndRecord(EndRecord endRecord) {
         this.endRecord = endRecord;
+    }
+
+    public ArrayList<ModificationRecord> getModificationRecords() {
+        return modificationRecords;
+    }
+
+    public void setModificationRecords(ArrayList<ModificationRecord> modificationRecords) {
+        this.modificationRecords = modificationRecords;
     }
 
     public ArrayList<TextRecord> getTextRecords() {
@@ -59,6 +68,10 @@ public class ObjectProgram implements Printable{
         textRecords.get(textRecords.size() - 1).addToBody(machineCode);
     }
 
+    public void addToModificationRecords (ModificationRecord record) {
+        modificationRecords.add(record);
+    }
+
     @Override
     public void print() {
         String startAddr = NumberUtils.adjustSize(Integer.toHexString(getEndRecord().getStartAddr()),6).toUpperCase();
@@ -67,6 +80,11 @@ public class ObjectProgram implements Printable{
         System.out.println("H " + getHeaderRecord().getProgramName() + " " + startAddr + " " + programLength);
         System.out.println("D " + getDefRecord().getBody().toUpperCase());
         System.out.println("R " + getRefRecord().getBody().toUpperCase());
+
+        for(ModificationRecord record : getModificationRecords()) {
+            System.out.println("M " + record.getModRec());
+        }
+
         for(TextRecord record : getTextRecords()) {
             String firstExec = NumberUtils.adjustSize(Integer.toHexString(record.getFirstExec()),6);
             String recordLength = NumberUtils.adjustSize(Integer.toHexString(record.getLength()/2).toUpperCase(),2);

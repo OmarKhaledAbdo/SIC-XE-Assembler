@@ -75,8 +75,16 @@ class Assembler implements Printable {
                 curLiteralPool++;
             } else {
                 objectProgram.addToTextRecords(curCommand.getMnemonic(), curCommand.getMachineCode(), curCommand.getAddress());
+                System.out.println("extRef: " + curCommand.extRef);
+                if(curCommand.extRef.size() > 0) {
+                    ModificationRecord modRec = new ModificationRecord();
+                    if(curCommand.getMnemonic().equals("WORD"))
+                        modRec.add(curCommand.getAddress(), curCommand.extRef, " 06 ");
+                    else
+                        modRec.add(curCommand.getAddress() + 1, curCommand.extRef, " 05 ");
+                    objectProgram.addToModificationRecords(modRec);
+                }
             }
-
         }
 
         objectProgram.setEndRecord(new EndRecord(startAddr));
