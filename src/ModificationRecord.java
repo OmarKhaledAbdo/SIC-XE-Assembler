@@ -1,9 +1,6 @@
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by HeshamSaleh on 12/13/17.
- */
+
 
 public class ModificationRecord {
     private String modRec = "";
@@ -22,5 +19,8 @@ public class ModificationRecord {
             if(i+1 < extRef.size())
                 modRec += "\nM ";
         }
+    }
+    public void add(int address, String programName, String halfByte) {
+        modRec += NumberUtils.adjustSize(Integer.toHexString(address).toUpperCase(),6) + halfByte + programName;
     }
 }

@@ -10,14 +10,14 @@ public abstract class Command {
     protected boolean directive;
     protected String machineCode;
     protected Integer opCode;
-    protected Boolean absolute = null;
+    protected Integer absolute = null;
     protected List <String> extRef = new ArrayList<>();
 
-    public Boolean getAbsolute() {
+    public Integer getAbsolute() {
         return absolute;
     }
 
-    public void setAbsolute(Boolean absolute) {
+    public void setAbsolute(Integer absolute) {
         this.absolute = absolute;
     }
 

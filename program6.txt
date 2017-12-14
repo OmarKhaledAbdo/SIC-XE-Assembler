@@ -22,6 +22,7 @@ LOOP    LDA     TABLE + 4
 NEXT    ADDR    S,X
         COMPR   X,T
         JLT     LOOP
+        +LDT    NEXT + 5
 TABLE   RESW    200
 LENGTH  RESW    1
 C       RESW    1

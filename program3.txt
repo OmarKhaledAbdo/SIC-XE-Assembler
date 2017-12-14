@@ -22,9 +22,13 @@ LOOP    LDA     TABLE + 4
 NEXT    ADDR    S,X
         COMPR   X,T
         JLT     LOOP
-TABLE   RESW    200
 LENGTH  RESW    1
 C       RESW    1
 TEST    WORD    BUFFEND-BUFFER
+        WORD    LENGTH-10
+        STA     FIVE
+TABLE   RESW    200
+FIVE    WORD    BUFFER+5
+        WORD    LENGTH
 BUFFER  RESW    4096
         END

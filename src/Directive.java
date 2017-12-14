@@ -41,9 +41,9 @@ public class Directive extends Command {
                 machineCode = getOperandHexValue();
                 break;
             case "WORD":
-                if (operand.indexOf('+') == -1 && operand.indexOf('-') == -1) {
+                if (operand.indexOf(',') != -1) {
                     machineCode = getWordHexValue();
-                    absolute = true;
+                    absolute = 0;
                 } else { //expression
                     machineCode = getWordExpressionValue(sec);
                 }
@@ -73,7 +73,7 @@ public class Directive extends Command {
                 absValue += (operand.charAt(0) == '+' ? 1 : -1) * Integer.valueOf(operand.substring(1), 10);
             }
         }
-        absolute = relativeDiff == 0;
+        absolute = relativeDiff;
         String hexValue = NumberUtils.adjustSize(Integer.toHexString(absValue), 6);
         return hexValue;
     }

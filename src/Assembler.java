@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Assembler implements Printable {
 
     private Section section;
@@ -54,12 +52,11 @@ class Assembler implements Printable {
         objectProgram.setDefRecord(new DefRecord(section.getExtDef(), section));
         objectProgram.setRefRecord(new RefRecord(section.getExtRef()));
 
-
         Integer curLiteralPool = 0;
         for (Command curCommand : section.getCommands()) {
             curCommand.constructMachineCode(section);
-            if(curCommand.getMnemonic().equals("LTORG") || curCommand.getMnemonic().equals("END")) {
-                Literal [] literals = section.getLitTab().getLiteralPool(curLiteralPool);
+            if (curCommand.getMnemonic().equals("LTORG") || curCommand.getMnemonic().equals("END")) {
+                Literal[] literals = section.getLitTab().getLiteralPool(curLiteralPool);
                 for (Literal literal : literals) {
                     objectProgram.addToTextRecords(null, literal.getValue(), literal.getAddress());
                 }
@@ -67,19 +64,35 @@ class Assembler implements Printable {
             } else {
                 objectProgram.addToTextRecords(curCommand.getMnemonic(), curCommand.getMachineCode(), curCommand.getAddress());
                 //System.out.println("extRef: " + curCommand.extRef);
-                if(curCommand.extRef.size() > 0) {
+                if (curCommand.extRef.size() > 0) {
                     ModificationRecord modRec = new ModificationRecord();
-                    if(curCommand.getMnemonic().equals("WORD"))
+                    if (curCommand.getMnemonic().equals("WORD"))
                         modRec.add(curCommand.getAddress(), curCommand.extRef, " 06 ");
                     else
                         modRec.add(curCommand.getAddress() + 1, curCommand.extRef, " 05 ");
                     objectProgram.addToModificationRecords(modRec);
                 }
+                System.out.println(curCommand.getMnemonic() + curCommand.absolute);
+                if (curCommand.absolute != null) {
+                    System.out.println("Absolute Good");
+                    Character sign = curCommand.absolute < 0 ? '-' : '+';
+                    for (int i = 0; i < Math.abs(curCommand.absolute); i++) {
+                        ModificationRecord modRec = new ModificationRecord();
+                        if (curCommand.getMnemonic().equals("WORD")) {
+                            modRec.add(curCommand.getAddress(), sign + objectProgram.getHeaderRecord().getProgramName(), " 06 ");
+                        }
+                        else {
+                            modRec.add(curCommand.getAddress(), sign + objectProgram.getHeaderRecord().getProgramName(), " 05 ");
+                        }
+                        objectProgram.addToModificationRecords(modRec);
+                    }
+
+                }
             }
         }
-
         objectProgram.setEndRecord(new EndRecord(startAddr));
     }
+
     public void print() {
         section.print();
         section.getSymTab().print();

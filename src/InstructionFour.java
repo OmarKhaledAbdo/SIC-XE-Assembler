@@ -4,7 +4,7 @@ public class InstructionFour extends Instruction {
     }
 
     public void constructMachineCode(Section sec) {
-        System.out.println(mnemonic + " " + trimmedOpcode());
+        //System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
         Character n, i, x = '0';
         if (operand.startsWith("#")) {
@@ -23,10 +23,10 @@ public class InstructionFour extends Instruction {
             }
             n = '0';
             i = '1';
-            absolute = relativeDiff == 0;
+            absolute = relativeDiff;
             address = Integer.toBinaryString(absValue);
         } else if (operand.startsWith("@")) {
-            absolute = true;
+            absolute = 1;
             String sym = operand.substring(1);
             address = Integer.toBinaryString(sec.getSymTab().getAddress(sym));
             n = '1'; //n = 1, i = 1
@@ -39,9 +39,9 @@ public class InstructionFour extends Instruction {
             if (sec.getExtRef().contains(operands[0])) {
                 extRef.add("+" + operands[0]);
                 addressValue = 0;
-                absolute = true;
+                absolute = 0;
             } else {
-                absolute = false;
+                absolute = 1;
                 addressValue = sec.getSymTab().getAddress(operands[0]);
             }
             //+ Constant
