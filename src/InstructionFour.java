@@ -4,9 +4,9 @@ public class InstructionFour extends Instruction {
     }
 
     public void constructMachineCode(Section sec) {
-        //System.out.println(mnemonic + " " + trimmedOpcode());
+        System.out.println(mnemonic + " " + trimmedOpcode());
         String address;
-        char n, i, x = '0';
+        Character n, i, x = '0';
         if (operand.startsWith("#")) {
             String[] operands = operand.replace("#", "").split("(?=[-+])");
             operands[0] = "+" + operands[0];
@@ -35,6 +35,7 @@ public class InstructionFour extends Instruction {
             //etc: listA + 4, listA, X
             Integer addressValue;
             String[] operands = operand.replace(" ", "").split("(?=[-,+])");
+            //System.out.println(operands[0]);
             if (sec.getExtRef().contains(operands[0])) {
                 extRef.add("+" + operands[0]);
                 addressValue = 0;

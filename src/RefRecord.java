@@ -1,8 +1,15 @@
+import java.util.Set;
+
 /**
  * Created by HeshamSaleh on 12/13/17.
  */
 public class RefRecord {
-    private String label;
+
+    public RefRecord (Set<String> extRef) {
+        for(String ref : extRef) {
+            add(ref);
+        }
+    }
 
     public String getBody() {
         return body;
@@ -12,7 +19,7 @@ public class RefRecord {
         this.body = body;
     }
 
-    private String body;
+    private String body = "";
 
     public void add(String label) {
         if(body == null) {

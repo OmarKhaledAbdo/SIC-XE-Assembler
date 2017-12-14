@@ -13,6 +13,24 @@ public abstract class Command {
     protected Boolean absolute = null;
     protected List <String> extRef = new ArrayList<>();
 
+    public Boolean getAbsolute() {
+        return absolute;
+    }
+
+    public void setAbsolute(Boolean absolute) {
+        this.absolute = absolute;
+    }
+
+    public List<String> getExtRef() {
+        return extRef;
+    }
+
+    public void setExtRef(List<String> extRef) {
+        this.extRef = extRef;
+    }
+
+
+
     public Command() {
     }
 

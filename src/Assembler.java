@@ -51,18 +51,9 @@ class Assembler implements Printable {
 
         objectProgram.setHeaderRecord(new HeaderRecord(section.getCommands().get(0).getLabel(),
                 startAddr, lastUsedAddress - startAddr));
+        objectProgram.setDefRecord(new DefRecord(section.getExtDef(), section));
+        objectProgram.setRefRecord(new RefRecord(section.getExtRef()));
 
-        DefRecord defRecord = new DefRecord();
-        for(String def : section.getExtDef()) {
-            defRecord.add(def,Integer.toHexString(section.getSymTab().getAddress(def)));
-            objectProgram.setDefRecord(defRecord);
-        }
-
-        RefRecord refRecord = new RefRecord();
-        for(String ref : section.getExtRef()) {
-            refRecord.add(ref);
-            objectProgram.setRefRecord(refRecord);
-        }
 
         Integer curLiteralPool = 0;
         for (Command curCommand : section.getCommands()) {
@@ -75,7 +66,7 @@ class Assembler implements Printable {
                 curLiteralPool++;
             } else {
                 objectProgram.addToTextRecords(curCommand.getMnemonic(), curCommand.getMachineCode(), curCommand.getAddress());
-                System.out.println("extRef: " + curCommand.extRef);
+                //System.out.println("extRef: " + curCommand.extRef);
                 if(curCommand.extRef.size() > 0) {
                     ModificationRecord modRec = new ModificationRecord();
                     if(curCommand.getMnemonic().equals("WORD"))

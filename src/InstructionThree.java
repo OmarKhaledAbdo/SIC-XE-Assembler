@@ -13,9 +13,6 @@ public class InstructionThree extends Instruction {
 
     private void setRelativity(Integer targetAddr, Integer baseAddr) {
         Integer pc = address + Integer.valueOf(format, 10);
-
-        //System.out.println("TargetAddress " + targetAddr + "\n\n");
-
         Integer diff = targetAddr - pc;
         if (diff > 2047 || diff < -2048) { //Base Relative
             try {

@@ -78,8 +78,13 @@ public class ObjectProgram implements Printable{
         String programLength = NumberUtils.adjustSize(Integer.toHexString(getHeaderRecord().getLength()),6).toUpperCase();
         System.out.println("HTE Record:");
         System.out.println("H " + getHeaderRecord().getProgramName() + " " + startAddr + " " + programLength);
-        System.out.println("D " + getDefRecord().getBody().toUpperCase());
-        System.out.println("R " + getRefRecord().getBody().toUpperCase());
+
+        if(getDefRecord().getBody().length() > 0) {
+            System.out.println("D " + getDefRecord().getBody().toUpperCase());
+        }
+        if(getRefRecord().getBody().length() > 0) {
+            System.out.println("R " + getRefRecord().getBody().toUpperCase());
+        }
 
         for(TextRecord record : getTextRecords()) {
             String firstExec = NumberUtils.adjustSize(Integer.toHexString(record.getFirstExec()),6);
