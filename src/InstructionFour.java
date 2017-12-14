@@ -13,7 +13,7 @@ public class InstructionFour extends Instruction {
             Integer absValue = 0, relativeDiff = 0;
             for (String operand : operands) {
                 if (sec.getExtRef().contains(operand.substring(1))) {
-                    extRef.add(operand.substring(1));
+                    extRef.add(operand);
                 } else if (sec.getSymTab().containsLabel(operand.substring(1))) {
                     relativeDiff += (operand.charAt(0) == '+' ? 1 : -1);
                     absValue = (operand.charAt(0) == '+' ? 1 : -1) * sec.getSymTab().getAddress(operand.substring(1));
@@ -36,7 +36,7 @@ public class InstructionFour extends Instruction {
             Integer addressValue;
             String[] operands = operand.replace(" ", "").split("(?=[-,+])");
             if (sec.getExtRef().contains(operands[0])) {
-                extRef.add(operands[0]);
+                extRef.add("+" + operands[0]);
                 addressValue = 0;
                 absolute = true;
             } else {

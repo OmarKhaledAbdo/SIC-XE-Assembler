@@ -65,7 +65,7 @@ public class Directive extends Command {
         operands[0] = "+" + operands[0];
         for (String operand : operands) {
             if (sec.getExtRef().contains(operand.substring(1))) {
-                extRef.add(operand.substring(1));
+                extRef.add(operand);
             } else if (sec.getSymTab().containsLabel(operand.substring(1))) {
                 relativeDiff += (operand.charAt(0) == '+' ? 1 : -1);
                 absValue = (operand.charAt(0) == '+' ? 1 : -1) * sec.getSymTab().getAddress(operand.substring(1));
